@@ -2,22 +2,25 @@ pipeline {
     agent any
 
     stages {
-        stage('Build Docker Image') {
+        stage('Checkout') {
             steps {
-                sh 'docker build -t fastapi-app .'
+                git 'https://github.com/Sap-04-Learner/fapi-jenkins.git'
             }
         }
 
-        stage('Stop Old Container') {
+        stage('Build Docker Image') {
             steps {
-                sh 'docker stop fastapi-container || true'
-                sh 'docker rm fastapi-container || true'
+                script {
+                    docker.build("fapi-jenkins:latest")
+                }
             }
         }
 
         stage('Run Container') {
             steps {
-                sh 'docker run -d -p 8000:8000 --name fastapi-container fastapi-app'
+                script {
+                    docker.image("fapi-jenkins:latest").run("-p 5000:5000")
+                }
             }
         }
     }
