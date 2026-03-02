@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') {
+            steps {
+                git 'https://github.com/Sap-04-Learner/fapi-jenkins.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t fastapi-app .'
+            }
+        }
+
+        stage('Stop Old Container') {
+            steps {
+                sh 'docker stop fastapi-container || true'
+                sh 'docker rm fastapi-container || true'
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                sh 'docker run -d -p 8000:8000 --name fastapi-container fastapi-app'
+            }
+        }
+    }
+}
