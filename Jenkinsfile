@@ -2,12 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone') {
-            steps {
-                git 'https://github.com/Sap-04-Learner/fapi-jenkins.git'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t fastapi-app .'
